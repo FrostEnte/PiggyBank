@@ -1,5 +1,6 @@
 package de.rwth.swc.piggybank.transfers.repository.entity
 
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.ManyToOne
@@ -17,9 +18,9 @@ import java.util.*
 data class MoneyTransferItemEntity(
     @Id
     val id: UUID,
-    @ManyToOne
+    @ManyToOne(cascade = [CascadeType.ALL])
     val source: AccountEntity,
-    @ManyToOne
+    @ManyToOne(cascade = [CascadeType.ALL])
     val target: AccountEntity,
     val amount: String
 )

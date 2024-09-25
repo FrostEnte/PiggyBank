@@ -3,6 +3,7 @@ package de.rwth.swc.piggybank.transfers.repository
 import de.rwth.swc.piggybank.domain.shared.valueobject.Account
 import de.rwth.swc.piggybank.domain.transfers.entity.MoneyTransferItem
 import de.rwth.swc.piggybank.domain.transfers.spi.MoneyTransferItems
+import de.rwth.swc.piggybank.transfers.repository.entity.AccountEntity
 import de.rwth.swc.piggybank.transfers.repository.entity.MoneyTransferItemEntity
 import de.rwth.swc.piggybank.transfers.repository.entity.mapping.MoneyTransferItemMapper
 import org.springframework.data.repository.CrudRepository
@@ -51,7 +52,7 @@ class MoneyTransferItemsRepository(
      * @param item The MoneyTransferItem to save.
      */
     override fun save(item: MoneyTransferItem) {
-        TODO("Not yet implemented")
+        repo.save(MoneyTransferItemEntity(id = item.id.value, source = AccountEntity(UUID.randomUUID(),item.source.type.toString(),item.source.identifier.toString()), target = AccountEntity(UUID.randomUUID(),item.target.type.toString(),item.target.identifier.toString()), amount = item.amount.toString()));
     }
 
     /**
