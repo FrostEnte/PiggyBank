@@ -3,7 +3,6 @@ package de.rwth.swc.piggybank.transfers.repository
 import de.rwth.swc.piggybank.domain.shared.valueobject.Account
 import de.rwth.swc.piggybank.domain.transfers.entity.MoneyTransferItem
 import de.rwth.swc.piggybank.domain.transfers.spi.MoneyTransferItems
-import de.rwth.swc.piggybank.transfers.repository.entity.AccountEntity
 import de.rwth.swc.piggybank.transfers.repository.entity.MoneyTransferItemEntity
 import de.rwth.swc.piggybank.transfers.repository.entity.mapping.MoneyTransferItemMapper
 import org.springframework.data.repository.CrudRepository
@@ -52,7 +51,7 @@ class MoneyTransferItemsRepository(
      * @param item The MoneyTransferItem to save.
      */
     override fun save(item: MoneyTransferItem) {
-        repo.save(MoneyTransferItemEntity(id = item.id.value, source = AccountEntity(UUID.randomUUID(),item.source.type.toString(),item.source.identifier.toString()), target = AccountEntity(UUID.randomUUID(),item.target.type.toString(),item.target.identifier.toString()), amount = item.amount.toString()));
+        repo.save(mapper.toPersistence(item))
     }
 
     /**
@@ -71,7 +70,9 @@ class MoneyTransferItemsRepository(
      * @return A collection of MoneyTransferItems received from the source account.
      */
     override fun getAllReceivedFromSource(source: Account): Collection<MoneyTransferItem> {
-        TODO("Not yet implemented")
+        return repo.findBySourceTypeAndSourceIdentifier(source.type.value, source.identifier.value).map {
+            mapper.toDomain(it)
+        }
     }
 
     /**
@@ -81,6 +82,8 @@ class MoneyTransferItemsRepository(
      * @return A collection of MoneyTransferItems transferred to the target account.
      */
     override fun getAllTransferredToTarget(target: Account): Collection<MoneyTransferItem> {
-        TODO("Not yet implemented")
+        return repo.findByTargetTypeAndTargetIdentifier(target.type.value, target.identifier.value).map {
+            mapper.toDomain(it)
+        }
     }
 }
